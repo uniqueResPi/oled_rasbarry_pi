@@ -87,10 +87,10 @@ def loop():
             if currentRow < 0:
                 currentRow = totalRows 
                 currentColumn = totalColumns
-#         print("updated values are currentRow index=")
-#         print(currentRow)
-#         print("currentColumn")
-#         print(currentColumn)
+        print("updated values are currentRow index=")
+        print(currentRow)
+        print("currentColumn")
+        print(currentColumn)
         value = allCellValues[currentRow][currentColumn]
         display_text(value)
         save_preferences()
@@ -128,10 +128,10 @@ def send_request(command, row, column):
         #print(json.dumps(response_data))
             parse_response(response_data, command)
             print(f"Value: {value}")
-            print(f"Row: {currentRow+1}")
-            print(f"Column: {currentColumn+1}")
-            print(f"TotalRow: {totalRows+1}")
-            print(f"TotalColumn: {totalColumns+1}")
+            print(f"Row: {currentRow}")
+            print(f"Column: {currentColumn}")
+            print(f"TotalRow: {totalRows}")
+            print(f"TotalColumn: {totalColumns}")
         else:
             print(f"Error: HTTP status code {response.status_code}")
     except requests.Timeout:
