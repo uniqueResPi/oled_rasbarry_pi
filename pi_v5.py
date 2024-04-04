@@ -72,6 +72,7 @@ def loop():
             #print("currentColumn")
             #print(currentColumn)
             value = allCellValues[currentRow][currentColumn]
+            print(value)
             display_text(value)
             save_preferences()
 
@@ -93,6 +94,7 @@ def loop():
     #         print("currentColumn")
     #         print(currentColumn)
             value = allCellValues[currentRow][currentColumn]
+            print(value)
             display_text(value)
             save_preferences()
 
@@ -105,7 +107,7 @@ def loop():
 
 
 def send_request(command, row, column):
-    global value,currentRow,currentColumn,totalRows,totalColumns
+    global value,currentRow,currentColumn,totalRows,totalColumns,allCellValues
     url = f"https://{serverAddress}/macros/s/AKfycbz-2sLxWJGjahPHEGOiEEsabQv3_X4m6Fzsjsfoj3skxL5rj8qL2zrlNwZea_BlLBh0/exec"
     params = {
         "command": command,
@@ -117,15 +119,11 @@ def send_request(command, row, column):
         response = requests.get( url, params=params, timeout=10)
 
         if response.status_code == 200:
+            
             response_data = response.json()
         #print("google sheet  response :")
         #print(json.dumps(response_data))
             parse_response(response_data, command)
-            print(f"Value: {value}")
-            print(f"Row: {currentRow+1}")
-            print(f"Column: {currentColumn+1}")
-            print(f"TotalRow: {totalRows+1}")
-            print(f"TotalColumn: {totalColumns+1}")
             if currentRow < 0 or currentRow > totalRows or currentColumn < 0 or currentColumn > totalColumns:
                 print("somthing is out of range after fetechting data from network  in x and y")
                 currentRow=0
@@ -136,6 +134,12 @@ def send_request(command, row, column):
             #print(value)
             display_text(value)
             save_preferences()
+            print(f"Value: {value}")
+            print(f"Row: {currentRow+1}")
+            print(f"Column: {currentColumn+1}")
+            print(f"TotalRow: {totalRows+1}")
+            print(f"TotalColumn: {totalColumns+1}")
+           
         else:
             print(f"Error: HTTP status code {response.status_code}")
     except requests.Timeout:
