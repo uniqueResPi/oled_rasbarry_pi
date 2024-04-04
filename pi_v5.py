@@ -163,7 +163,7 @@ def parse_response(response_data, command):
         for i in range(min(totalRows, MAX_ROWS)):
             inner_array = all_cell_values[i]
             for j in range(min(totalColumns, MAX_COLUMNS)):
-                global allCellValues,
+                global allCellValues
                 allCellValues[i][j] = inner_array[j]
 #         print("now all 2d table is parse and print value:")
 #         for row in allCellValues:
