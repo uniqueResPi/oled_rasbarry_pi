@@ -105,6 +105,7 @@ def loop():
 
 
 def send_request(command, row, column):
+    global value,currentRow,currentColumn,totalRows,totalColumns
     url = f"https://{serverAddress}/macros/s/AKfycbz-2sLxWJGjahPHEGOiEEsabQv3_X4m6Fzsjsfoj3skxL5rj8qL2zrlNwZea_BlLBh0/exec"
     params = {
         "command": command,
