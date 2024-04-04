@@ -50,7 +50,7 @@ def setup():
     load_preferences()
     display_text(value)
 
-async def loop():
+def loop():
     global updateTimeCount, value, currentRow, currentColumn, totalRows, totalColumns
     while True:
         #await asyncio.sleep(0)
