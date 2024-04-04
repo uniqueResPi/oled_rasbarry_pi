@@ -160,10 +160,10 @@ def parse_response(response_data, command):
         print(totalRows)
         print("totalColumns")
         print(totalColumns)
-        for i in range(min(totalRows, MAX_ROWS)):
+        for i in range(min(totalRows+1, MAX_ROWS)):
             inner_array = all_cell_values[i]
-            print(all_cell_values[i])
-            for j in range(min(totalColumns, MAX_COLUMNS)):
+            #print(all_cell_values[i])
+            for j in range(min(totalColumns+1, MAX_COLUMNS)):
                 global allCellValues
                 print(inner_array[j])
                 allCellValues[i][j] = inner_array[j]
