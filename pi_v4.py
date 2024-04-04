@@ -1,4 +1,3 @@
-import asyncio
 import requests
 import json
 import time
@@ -54,8 +53,7 @@ def setup():
 async def loop():
     global updateTimeCount, value, currentRow, currentColumn, totalRows, totalColumns
     while True:
-        await asyncio.sleep(0)
-        
+        #await asyncio.sleep(0)
         if GPIO.input(nextButtonPin) == GPIO.LOW:
             print("next button is pressed:")
             #print("current  values are currentRow index=")
@@ -100,13 +98,13 @@ async def loop():
 
         if time.time() - updateTimeCount > updateTime:
             print("update time is over now updateing:")
-            asyncio.create_task(send_request(allCommand, MAX_ROWS, MAX_COLUMNS))
+            send_request(allCommand, MAX_ROWS, MAX_COLUMNS)
             updateTimeCount = time.time()
 
 
 
 
-async def send_request(command, row, column):
+def send_request(command, row, column):
     url = f"https://{serverAddress}/macros/s/AKfycbz-2sLxWJGjahPHEGOiEEsabQv3_X4m6Fzsjsfoj3skxL5rj8qL2zrlNwZea_BlLBh0/exec"
     params = {
         "command": command,
@@ -115,7 +113,7 @@ async def send_request(command, row, column):
     }
     try:
         
-        response = await asyncio.to_thread(requests.get, url, params=params, timeout=25)
+        response = requests.get( url, params=params, timeout=10)
 
         if response.status_code == 200:
             response_data = response.json()
@@ -235,6 +233,6 @@ if __name__ == "__main__":
     try:
         setup()
         #while True:
-          asyncio.run(loop())
+        loop()
     except KeyboardInterrupt:
         GPIO.cleanup()
