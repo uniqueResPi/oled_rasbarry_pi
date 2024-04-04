@@ -101,8 +101,8 @@ def loop():
         if currentRow < 0 or currentRow > totalRows or currentColumn < 0 or currentColumn > totalColumns:
             currentRow=0
             currentColumn=0
-            
-        value=allCellValues[currentRow][currentColumn]
+        #global value    
+        #value=allCellValues[currentRow][currentColumn]
         #print("now value is set and go to save new data: value is =")
         #print(value)
         display_text(value)
@@ -127,6 +127,8 @@ def send_request(command, row, column):
         #print("google sheet  response :")
         #print(json.dumps(response_data))
             parse_response(response_data, command)
+            global value    
+            value=allCellValues[currentRow][currentColumn]
             print(f"Value: {value}")
             print(f"Row: {currentRow}")
             print(f"Column: {currentColumn}")
@@ -161,10 +163,11 @@ def parse_response(response_data, command):
         for i in range(min(totalRows, MAX_ROWS)):
             inner_array = all_cell_values[i]
             for j in range(min(totalColumns, MAX_COLUMNS)):
+                global allCellValues,
                 allCellValues[i][j] = inner_array[j]
-        print("now all 2d table is parse and print value:")
-        for row in allCellValues:
-            print(" ".join(map(str,row)))
+#         print("now all 2d table is parse and print value:")
+#         for row in allCellValues:
+#             print(" ".join(map(str,row)))
         
 
 
