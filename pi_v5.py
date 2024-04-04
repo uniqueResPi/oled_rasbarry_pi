@@ -123,13 +123,18 @@ def send_request(command, row, column):
         if response.status_code == 200:
             
             response_data = response.json()
+            
         #print("google sheet  response :")
         #print(json.dumps(response_data))
+           
             parse_response(response_data, command)
+            print("after parsing check 2d array allcellvalues")
+            print(allCellValues)
             if currentRow < 0 or currentRow > totalRows or currentColumn < 0 or currentColumn > totalColumns:
                 print("somthing is out of range after fetechting data from network  in x and y")
                 currentRow=0
                 currentColumn=0
+            print("after update print value=")
             print(allCellValues[currentRow][currentColumn])   
             value=allCellValues[currentRow][currentColumn]
             #print("now value is set and go to save new data: value is =")
