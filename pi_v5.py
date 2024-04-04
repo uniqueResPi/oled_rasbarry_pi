@@ -183,7 +183,7 @@ def load_preferences():
     try:
         with open("preferences.json", "r") as file:
             preferences = json.load(file)
-            global currentRow, currentColumn, totalRows, totalColumns, allCellValues
+            global currentRow, currentColumn, totalRows, totalColumns, allCellValues,value
             currentRow = preferences["currentRow"]
             currentColumn = preferences["currentColumn"]
             totalRows = preferences["totalRows"]
@@ -193,8 +193,11 @@ def load_preferences():
             print("laod total columes")
             print(totalColumns)
             allCellValues = preferences["allCellValues"]
+            value=allCellValues[currentRow][currentColumn]
+            print("load value =")
+            print(value)
             print("loaded table expected: ")
-            print(allCellValues)
+            #print(allCellValues)
     except FileNotFoundError:
            print("data not exist");
         
