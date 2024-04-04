@@ -52,64 +52,67 @@ def setup():
 
 def loop():
     global updateTimeCount, value, currentRow, currentColumn, totalRows, totalColumns
-    while True:
-        #await asyncio.sleep(0)
-        if GPIO.input(nextButtonPin) == GPIO.LOW:
-            print("next button is pressed:")
-            #print("current  values are currentRow index=")
-            #print(currentRow)
-            #print("currentColumn")
-            #print(currentColumn)
-            currentColumn += 1
-            if currentColumn >= totalColumns:
-                currentRow += 1
+
+    if GPIO.input(nextButtonPin) == GPIO.LOW:
+        print("next button is pressed:")
+        print("current  values are currentRow index=")
+        print(currentRow)
+        print("currentColumn")
+        print(currentColumn)
+        currentColumn += 1
+        if currentColumn >= totalColumns:
+            currentRow += 1
+            currentColumn = 0
+            if currentRow >= totalRows:
+                currentRow = 0
                 currentColumn = 0
-                if currentRow >= totalRows:
-                    currentRow = 0
-                    currentColumn = 0
-            #print("updated values are currentRow index=")
-            #print(currentRow)
-            #print("currentColumn")
-            #print(currentColumn)
-            value = allCellValues[currentRow][currentColumn]
-            print("value printing")
-            print(value)
-            display_text(value)
-            save_preferences()
+        print("updated values are currentRow index=")
+        print(currentRow)
+        print("currentColumn")
+        print(currentColumn)
+        value = allCellValues[currentRow][currentColumn]
+        display_text(value)
+        save_preferences()
 
-        elif GPIO.input(prevButtonPin) == GPIO.LOW:
-            print("prev Butotn is pressed:")
-            #print("currnet values are currentRow index=")
-            #print(currentRow)
-            #print("currentColumn")
-            #print(currentColumn)
-            currentColumn -= 1
-            if currentColumn < 0:
-                currentRow -= 1
-                currentColumn = totalColumns 
-                if currentRow < 0:
-                    currentRow = totalRows 
-                    currentColumn = totalColumns
-    #         print("updated values are currentRow index=")
-    #         print(currentRow)
-    #         print("currentColumn")
-    #         print(currentColumn)
-            value = allCellValues[currentRow][currentColumn]
-            print("value printing=")
-            print(value)
-            display_text(value)
-            save_preferences()
+    elif GPIO.input(prevButtonPin) == GPIO.LOW:
+        print("prev Butotn is pressed:")
+        print("currnet values are currentRow index=")
+        print(currentRow)
+        print("currentColumn")
+        print(currentColumn)
+        currentColumn -= 1
+        if currentColumn < 0:
+            currentRow -= 1
+            currentColumn = totalColumns 
+            if currentRow < 0:
+                currentRow = totalRows 
+                currentColumn = totalColumns
+#         print("updated values are currentRow index=")
+#         print(currentRow)
+#         print("currentColumn")
+#         print(currentColumn)
+        value = allCellValues[currentRow][currentColumn]
+        display_text(value)
+        save_preferences()
 
-        if time.time() - updateTimeCount > updateTime:
-            print("update time is over now updateing:")
-            send_request(allCommand, MAX_ROWS, MAX_COLUMNS)
-            updateTimeCount = time.time()
+    if time.time() - updateTimeCount > updateTime:
+        print("update time is over now updateing:")
+        send_request(allCommand, MAX_ROWS, MAX_COLUMNS)
+        if currentRow < 0 or currentRow > totalRows or currentColumn < 0 or currentColumn > totalColumns:
+            currentRow=0
+            currentColumn=0
+            
+        value=allCellValues[currentRow][currentColumn]
+        #print("now value is set and go to save new data: value is =")
+        #print(value)
+        display_text(value)
+        save_preferences()
+        updateTimeCount = time.time()
 
 
 
 
 def send_request(command, row, column):
-    global value,currentRow,currentColumn,totalRows,totalColumns,allCellValues
     url = f"https://{serverAddress}/macros/s/AKfycbz-2sLxWJGjahPHEGOiEEsabQv3_X4m6Fzsjsfoj3skxL5rj8qL2zrlNwZea_BlLBh0/exec"
     params = {
         "command": command,
@@ -117,42 +120,24 @@ def send_request(command, row, column):
         "column": column+1
     }
     try:
-        
-        response = requests.get( url, params=params, timeout=10)
+        response = requests.get(url, params=params, timeout=10)
 
         if response.status_code == 200:
-            
             response_data = response.json()
-            
         #print("google sheet  response :")
         #print(json.dumps(response_data))
-           
             parse_response(response_data, command)
-            print("after parsing check 2d array allcellvalues")
-            print(allCellValues)
-            if currentRow < 0 or currentRow > totalRows or currentColumn < 0 or currentColumn > totalColumns:
-                print("somthing is out of range after fetechting data from network  in x and y")
-                currentRow=0
-                currentColumn=0
-            print("after update print value=")
-            print(allCellValues[currentRow][currentColumn])   
-            value=allCellValues[currentRow][currentColumn]
-            #print("now value is set and go to save new data: value is =")
-            #print(value)
-            display_text(value)
-            save_preferences()
             print(f"Value: {value}")
             print(f"Row: {currentRow+1}")
             print(f"Column: {currentColumn+1}")
             print(f"TotalRow: {totalRows+1}")
             print(f"TotalColumn: {totalColumns+1}")
-           
         else:
             print(f"Error: HTTP status code {response.status_code}")
     except requests.Timeout:
         print("Error: Request timed out")
     except requests.RequestException as e:
-        print(f"exception Error: {type(e).__name__}")
+        print(f"Error: {type(e).__name__}")
 def parse_response(response_data, command):
     global allCellValues, currentRow, currentColumn, totalRows, totalColumns, value
 
@@ -244,7 +229,7 @@ def display_text(text):
 if __name__ == "__main__":
     try:
         setup()
-        #while True:
-        loop()
+        while True:
+            loop()
     except KeyboardInterrupt:
         GPIO.cleanup()
