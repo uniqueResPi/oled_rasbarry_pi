@@ -72,6 +72,7 @@ def loop():
             #print("currentColumn")
             #print(currentColumn)
             value = allCellValues[currentRow][currentColumn]
+            print("value printing")
             print(value)
             display_text(value)
             save_preferences()
@@ -94,6 +95,7 @@ def loop():
     #         print("currentColumn")
     #         print(currentColumn)
             value = allCellValues[currentRow][currentColumn]
+            print("value printing=")
             print(value)
             display_text(value)
             save_preferences()
@@ -128,7 +130,7 @@ def send_request(command, row, column):
                 print("somthing is out of range after fetechting data from network  in x and y")
                 currentRow=0
                 currentColumn=0
-                
+            print(allCellValues[currentRow][currentColumn])   
             value=allCellValues[currentRow][currentColumn]
             #print("now value is set and go to save new data: value is =")
             #print(value)
